@@ -1,0 +1,47 @@
+{
+  "name": "multi-chain-wallet-tester",
+  "version": "1.0.0",
+  "description": "A mobile-optimized web app for testing wallet connections across multiple blockchains (EVM/Ethereum, Solana, Aptos)",
+  "main": "index.html",
+  "scripts": {
+    "start": "python3 -m http.server 8080 || python -m http.server 8080 || npx serve .",
+    "serve": "npx serve -s . -p 8080",
+    "dev": "npx live-server --port=8080 --host=0.0.0.0",
+    "build": "echo 'No build process needed for static files'",
+    "test": "echo 'No tests configured'"
+  },
+  "keywords": [
+    "wallet",
+    "blockchain", 
+    "ethereum",
+    "solana",
+    "aptos",
+    "walletconnect",
+    "reown",
+    "phantom",
+    "petra",
+    "mobile",
+    "webview"
+  ],
+  "author": "Wallet Tester Developer",
+  "license": "MIT",
+  "dependencies": {
+    "@walletconnect/web3modal": "^3.5.0",
+    "@reown/appkit": "^1.0.0"
+  },
+  "devDependencies": {
+    "serve": "^14.2.0",
+    "live-server": "^1.2.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/multi-chain-wallet-tester.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-username/multi-chain-wallet-tester/issues"
+  },
+  "homepage": "https://github.com/your-username/multi-chain-wallet-tester#readme",
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
