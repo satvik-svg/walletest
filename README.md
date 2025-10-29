@@ -1,12 +1,14 @@
-# Multi-Chain Wallet Tester
+# 💰 Multi-Chain Wallet Tester
 
 A mobile-optimized web application for testing wallet connections across multiple blockchain networks. This app is specifically designed for use in mobile webviews to test wallet integrations.
 
-## Supported Wallets
+🌐 **Live Demo**: [Deploy on Vercel](https://vercel.com/new/clone?repository-url=https://github.com/yourusername/wallet-tester)
 
-- **Reown Kit (EVM/Ethereum)** - WalletConnect v2 integration for Ethereum and EVM-compatible chains
-- **Phantom (Solana)** - Native Solana wallet integration
-- **Petra (Aptos)** - Native Aptos wallet integration
+## 🚀 Supported Wallets
+
+- **🔗 Reown Kit (EVM/Ethereum)** - WalletConnect v2 integration for Ethereum and EVM-compatible chains
+- **👻 Phantom (Solana)** - Native Solana wallet integration  
+- **💎 Petra (Aptos)** - Native Aptos wallet integration
 
 ## Features
 

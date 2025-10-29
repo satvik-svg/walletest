@@ -7,7 +7,7 @@
     "start": "python3 -m http.server 8080 || python -m http.server 8080 || npx serve .",
     "serve": "npx serve -s . -p 8080",
     "dev": "npx live-server --port=8080 --host=0.0.0.0",
-    "build": "echo 'No build process needed for static files'",
+    "build": "echo 'Static files ready - no build needed'",
     "test": "echo 'No tests configured'"
   },
   "keywords": [
@@ -26,8 +26,6 @@
   "author": "Wallet Tester Developer",
   "license": "MIT",
   "dependencies": {
-    "@walletconnect/web3modal": "^3.5.0",
-    "@reown/appkit": "^1.0.0"
   },
   "devDependencies": {
     "serve": "^14.2.0",
@@ -40,8 +38,5 @@
   "bugs": {
     "url": "https://github.com/your-username/multi-chain-wallet-tester/issues"
   },
-  "homepage": "https://github.com/your-username/multi-chain-wallet-tester#readme",
-  "engines": {
-    "node": ">=14.0.0"
-  }
+  "homepage": "https://github.com/your-username/multi-chain-wallet-tester#readme"
 }
