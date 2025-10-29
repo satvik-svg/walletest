@@ -196,6 +196,22 @@ class WalletTester {
         document.getElementById('connect-aptos').addEventListener('click', () => this.connectAptos());
         document.getElementById('disconnect-aptos').addEventListener('click', () => this.disconnectAptos());
 
+        // WebView wallet opening
+        const openMetamaskBtn = document.getElementById('open-metamask');
+        if (openMetamaskBtn) {
+            openMetamaskBtn.addEventListener('click', () => this.openWalletApp('metamask'));
+        }
+        
+        const openTrustBtn = document.getElementById('open-trust');
+        if (openTrustBtn) {
+            openTrustBtn.addEventListener('click', () => this.openWalletApp('trust'));
+        }
+        
+        const openCoinbaseBtn = document.getElementById('open-coinbase');
+        if (openCoinbaseBtn) {
+            openCoinbaseBtn.addEventListener('click', () => this.openWalletApp('coinbase'));
+        }
+
         // Test actions
         document.getElementById('sign-evm').addEventListener('click', () => this.signMessageEVM());
         document.getElementById('sign-solana').addEventListener('click', () => this.signMessageSolana());
@@ -218,24 +234,10 @@ class WalletTester {
             const isWebView = window.mobileOptimizer && window.mobileOptimizer.isWebView;
             
             if (isWebView) {
-                // WebView approach - try to open wallet apps directly
-                this.logResult('info', 'WebView detected - attempting direct wallet connection');
-                
-                // Try MetaMask mobile deep link
-                const metamaskUrl = `https://metamask.app.link/dapp/${window.location.hostname}`;
-                window.open(metamaskUrl, '_blank');
-                
-                // Simulate connection for demo purposes in WebView
-                setTimeout(() => {
-                    this.connections.evm = true;
-                    this.updateWalletInfo('evm', {
-                        address: '0x1234...5678',
-                        chain: 'Ethereum',
-                        balance: '0 ETH'
-                    });
-                    this.logResult('success', 'WebView wallet connection simulated (MetaMask should open)');
-                }, 2000);
-                
+                // WebView approach - show instructions to use direct wallet buttons
+                this.logResult('info', 'WebView detected - use the "Open [Wallet]" buttons below to connect');
+                this.logResult('info', 'Click "Open MetaMask", "Open Trust Wallet", or "Open Coinbase Wallet"');
+                this.updateConnectionStatus('evm', 'disconnected');
                 return;
             }
             
@@ -511,6 +513,62 @@ class WalletTester {
     clearResults() {
         const resultsContainer = document.getElementById('results');
         resultsContainer.innerHTML = '<p class="placeholder">Test results will appear here...</p>';
+    }
+
+    // Open wallet apps with correct deep links
+    openWalletApp(walletType) {
+        let deepLink;
+        let fallbackUrl;
+        
+        switch (walletType) {
+            case 'metamask':
+                // Direct MetaMask app opening
+                deepLink = 'metamask://';
+                fallbackUrl = 'https://metamask.io/download/';
+                this.logResult('info', 'Attempting to open MetaMask app...');
+                break;
+                
+            case 'trust':
+                // Direct Trust Wallet app opening
+                deepLink = 'trust://';
+                fallbackUrl = 'https://trustwallet.com/download/';
+                this.logResult('info', 'Attempting to open Trust Wallet app...');
+                break;
+                
+            case 'coinbase':
+                // Direct Coinbase Wallet app opening
+                deepLink = 'cbwallet://';
+                fallbackUrl = 'https://www.coinbase.com/wallet/downloads';
+                this.logResult('info', 'Attempting to open Coinbase Wallet app...');
+                break;
+                
+            default:
+                this.logResult('error', 'Unknown wallet type');
+                return;
+        }
+        
+        // Try to open the app
+        try {
+            // Create a hidden link and click it
+            const link = document.createElement('a');
+            link.href = deepLink;
+            link.style.display = 'none';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            this.logResult('success', `Opened ${walletType} app (if installed)`);
+            
+            // Check if app opened successfully after a delay
+            setTimeout(() => {
+                // If we're still here, the app might not be installed
+                this.logResult('info', `If ${walletType} didn't open, it might not be installed. Download from: ${fallbackUrl}`);
+            }, 1000);
+            
+        } catch (error) {
+            this.logResult('error', `Failed to open ${walletType}: ${error.message}`);
+            this.logResult('info', `Download ${walletType} from: ${fallbackUrl}`);
+        }
     }
 }
 

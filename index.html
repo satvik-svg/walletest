@@ -66,13 +66,13 @@
                         </button>
                     </div>
                     <div class="webview-wallet-actions" id="webview-actions" style="display: none;">
-                        <button class="btn btn-test" onclick="window.open('https://metamask.app.link/dapp/' + window.location.hostname, '_blank')">
+                        <button class="btn btn-test" id="open-metamask">
                             <i class="fab fa-ethereum"></i> Open MetaMask
                         </button>
-                        <button class="btn btn-test" onclick="window.open('https://link.trustwallet.com/open_url?coin_id=60&url=' + encodeURIComponent(window.location.href), '_blank')">
+                        <button class="btn btn-test" id="open-trust">
                             <i class="fas fa-shield-alt"></i> Open Trust Wallet
                         </button>
-                        <button class="btn btn-test" onclick="window.open('https://go.cb-w.com/dapp?cb_url=' + encodeURIComponent(window.location.href), '_blank')">
+                        <button class="btn btn-test" id="open-coinbase">
                             <i class="fas fa-coins"></i> Open Coinbase Wallet
                         </button>
                     </div>
