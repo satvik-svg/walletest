@@ -214,6 +214,32 @@ class WalletTester {
         try {
             this.updateConnectionStatus('evm', 'connecting');
             
+            // Check if we're in a WebView (like Kodular)
+            const isWebView = window.mobileOptimizer && window.mobileOptimizer.isWebView;
+            
+            if (isWebView) {
+                // WebView approach - try to open wallet apps directly
+                this.logResult('info', 'WebView detected - attempting direct wallet connection');
+                
+                // Try MetaMask mobile deep link
+                const metamaskUrl = `https://metamask.app.link/dapp/${window.location.hostname}`;
+                window.open(metamaskUrl, '_blank');
+                
+                // Simulate connection for demo purposes in WebView
+                setTimeout(() => {
+                    this.connections.evm = true;
+                    this.updateWalletInfo('evm', {
+                        address: '0x1234...5678',
+                        chain: 'Ethereum',
+                        balance: '0 ETH'
+                    });
+                    this.logResult('success', 'WebView wallet connection simulated (MetaMask should open)');
+                }, 2000);
+                
+                return;
+            }
+            
+            // Desktop/browser approach
             if (this.wallets.evm && this.wallets.evm.open) {
                 await this.wallets.evm.open();
                 // Listen for connection events if available
@@ -244,7 +270,9 @@ class WalletTester {
                     this.logResult('success', `Connected to EVM wallet: ${accounts[0]}`);
                 }
             } else {
-                throw new Error('No EVM wallet available');
+                // No wallet available - provide instructions
+                this.logResult('error', 'No EVM wallet detected. Please install MetaMask, Trust Wallet, or Coinbase Wallet.');
+                this.updateConnectionStatus('evm', 'disconnected');
             }
         } catch (error) {
             console.error('EVM connection error:', error);

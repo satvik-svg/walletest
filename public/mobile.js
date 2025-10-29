@@ -31,6 +31,11 @@ class MobileOptimizer {
         
         if (this.isWebView) {
             document.body.classList.add('webview');
+            // Show WebView-specific wallet buttons
+            const webviewActions = document.getElementById('webview-actions');
+            if (webviewActions) {
+                webviewActions.style.display = 'block';
+            }
         }
 
         // Add mobile-specific optimizations

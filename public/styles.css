@@ -429,6 +429,33 @@ header p {
     }
 }
 
+/* WebView-specific wallet actions */
+.webview-wallet-actions {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.webview-wallet-actions .btn {
+    width: 100%;
+    margin-bottom: 8px;
+    justify-content: center;
+    font-size: 0.85em;
+}
+
+.webview .wallet-actions {
+    margin-bottom: 0;
+}
+
+/* WebView detection styles */
+.webview .wallet-card {
+    border-left: 4px solid #38b2ac;
+}
+
+.webview .wallet-card::before {
+    background: linear-gradient(90deg, #38b2ac, #319795);
+}
+
 /* High contrast mode */
 @media (prefers-contrast: high) {
     .wallet-card {
