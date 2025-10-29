@@ -4,7 +4,7 @@
   "description": "A mobile-optimized web app for testing wallet connections across multiple blockchains (EVM/Ethereum, Solana, Aptos)",
   "main": "index.html",
   "scripts": {
-    "build": "echo 'Static site - no build needed'"
+    "build": "cp index.html styles.css script.js mobile.js public/"
   },
   "keywords": [
     "wallet",

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Multi-Chain Wallet Tester</title>
+    
+    <!-- Mobile WebView Optimizations -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Wallet Tester">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#667eea">
+    
+    <!-- Security for WalletConnect -->
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self' 'unsafe-inline' 'unsafe-eval' https:;
+        connect-src 'self' https: wss: ws:;
+        img-src 'self' https: data:;
+        script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com;
+        style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com;
+        font-src 'self' https://cdnjs.cloudflare.com;
+    ">
+    
+    <!-- Preconnect to improve loading -->
+    <link rel="preconnect" href="https://relay.walletconnect.com">
+    <link rel="preconnect" href="https://explorer-api.walletconnect.com">
+    
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Favicon for mobile -->
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💰</text></svg>">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-wallet"></i> Wallet Tester</h1>
+            <p>Test wallet connections across multiple chains</p>
+        </header>
+
+        <main>
+            <!-- Wallet Status Cards -->
+            <div class="wallet-grid">
+                <!-- Reown Kit (EVM) -->
+                <div class="wallet-card" id="evm-card">
+                    <div class="wallet-header">
+                        <i class="fab fa-ethereum"></i>
+                        <h3>Reown Kit (EVM)</h3>
+                    </div>
+                    <div class="wallet-status" id="evm-status">
+                        <span class="status-indicator disconnected"></span>
+                        <span>Disconnected</span>
+                    </div>
+                    <div class="wallet-info" id="evm-info" style="display: none;">
+                        <p><strong>Address:</strong> <span id="evm-address"></span></p>
+                        <p><strong>Chain:</strong> <span id="evm-chain"></span></p>
+                        <p><strong>Balance:</strong> <span id="evm-balance">0 ETH</span></p>
+                    </div>
+                    <div class="wallet-actions">
+                        <button class="btn btn-primary" id="connect-evm">
+                            <i class="fas fa-plug"></i> Connect
+                        </button>
+                        <button class="btn btn-secondary" id="disconnect-evm" style="display: none;">
+                            <i class="fas fa-unlink"></i> Disconnect
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Phantom (Solana) -->
+                <div class="wallet-card" id="solana-card">
+                    <div class="wallet-header">
+                        <i class="fas fa-ghost"></i>
+                        <h3>Phantom (Solana)</h3>
+                    </div>
+                    <div class="wallet-status" id="solana-status">
+                        <span class="status-indicator disconnected"></span>
+                        <span>Disconnected</span>
+                    </div>
+                    <div class="wallet-info" id="solana-info" style="display: none;">
+                        <p><strong>Address:</strong> <span id="solana-address"></span></p>
+                        <p><strong>Network:</strong> <span id="solana-network">Mainnet</span></p>
+                        <p><strong>Balance:</strong> <span id="solana-balance">0 SOL</span></p>
+                    </div>
+                    <div class="wallet-actions">
+                        <button class="btn btn-primary" id="connect-solana">
+                            <i class="fas fa-plug"></i> Connect
+                        </button>
+                        <button class="btn btn-secondary" id="disconnect-solana" style="display: none;">
+                            <i class="fas fa-unlink"></i> Disconnect
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Petra (Aptos) -->
+                <div class="wallet-card" id="aptos-card">
+                    <div class="wallet-header">
+                        <i class="fas fa-diamond"></i>
+                        <h3>Petra (Aptos)</h3>
+                    </div>
+                    <div class="wallet-status" id="aptos-status">
+                        <span class="status-indicator disconnected"></span>
+                        <span>Disconnected</span>
+                    </div>
+                    <div class="wallet-info" id="aptos-info" style="display: none;">
+                        <p><strong>Address:</strong> <span id="aptos-address"></span></p>
+                        <p><strong>Network:</strong> <span id="aptos-network">Mainnet</span></p>
+                        <p><strong>Balance:</strong> <span id="aptos-balance">0 APT</span></p>
+                    </div>
+                    <div class="wallet-actions">
+                        <button class="btn btn-primary" id="connect-aptos">
+                            <i class="fas fa-plug"></i> Connect
+                        </button>
+                        <button class="btn btn-secondary" id="disconnect-aptos" style="display: none;">
+                            <i class="fas fa-unlink"></i> Disconnect
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Test Actions Section -->
+            <div class="test-section">
+                <h2><i class="fas fa-flask"></i> Test Actions</h2>
+                
+                <div class="test-grid">
+                    <div class="test-card">
+                        <h4>Sign Message Test</h4>
+                        <div class="input-group">
+                            <input type="text" id="message-input" placeholder="Enter message to sign" value="Hello from Wallet Tester!">
+                        </div>
+                        <div class="test-buttons">
+                            <button class="btn btn-test" id="sign-evm">Sign with EVM</button>
+                            <button class="btn btn-test" id="sign-solana">Sign with Solana</button>
+                            <button class="btn btn-test" id="sign-aptos">Sign with Aptos</button>
+                        </div>
+                    </div>
+
+                    <div class="test-card">
+                        <h4>Transaction Test</h4>
+                        <div class="input-group">
+                            <input type="text" id="recipient-input" placeholder="Recipient address">
+                            <input type="number" id="amount-input" placeholder="Amount" step="0.001" min="0">
+                        </div>
+                        <div class="test-buttons">
+                            <button class="btn btn-test" id="send-evm">Send ETH</button>
+                            <button class="btn btn-test" id="send-solana">Send SOL</button>
+                            <button class="btn btn-test" id="send-aptos">Send APT</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div class="results-section">
+                <h2><i class="fas fa-clipboard-list"></i> Test Results</h2>
+                <div class="results-container" id="results">
+                    <p class="placeholder">Test results will appear here...</p>
+                </div>
+                <button class="btn btn-secondary" id="clear-results">
+                    <i class="fas fa-trash"></i> Clear Results
+                </button>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/@walletconnect/web3modal@latest/dist/index.umd.js"></script>
+    <script src="https://unpkg.com/@reown/appkit@latest/dist/index.umd.js"></script>
+    <script src="mobile.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
