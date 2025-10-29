@@ -212,6 +212,18 @@ class WalletTester {
             openCoinbaseBtn.addEventListener('click', () => this.openWalletApp('coinbase'));
         }
 
+        // Add manual copy functionality
+        document.addEventListener('click', (e) => {
+            if (e.target.tagName === 'CODE') {
+                const text = e.target.textContent;
+                navigator.clipboard.writeText(text).then(() => {
+                    this.logResult('success', `Copied "${text}" to clipboard!`);
+                }).catch(() => {
+                    this.logResult('info', `Manual copy: ${text}`);
+                });
+            }
+        });
+
         // Test actions
         document.getElementById('sign-evm').addEventListener('click', () => this.signMessageEVM());
         document.getElementById('sign-solana').addEventListener('click', () => this.signMessageSolana());
@@ -515,31 +527,33 @@ class WalletTester {
         resultsContainer.innerHTML = '<p class="placeholder">Test results will appear here...</p>';
     }
 
-    // Open wallet apps with correct deep links
+    // Open wallet apps with multiple methods for maximum compatibility
     openWalletApp(walletType) {
-        let deepLink;
-        let fallbackUrl;
+        let deepLink, intentUrl, playStoreUrl, appName, packageName;
         
         switch (walletType) {
             case 'metamask':
-                // Direct MetaMask app opening
                 deepLink = 'metamask://';
-                fallbackUrl = 'https://metamask.io/download/';
-                this.logResult('info', 'Attempting to open MetaMask app...');
+                packageName = 'io.metamask';
+                intentUrl = `intent://metamask#Intent;scheme=metamask;package=io.metamask;S.browser_fallback_url=https://play.google.com/store/apps/details?id=io.metamask;end`;
+                playStoreUrl = 'https://play.google.com/store/apps/details?id=io.metamask';
+                appName = 'MetaMask';
                 break;
                 
             case 'trust':
-                // Direct Trust Wallet app opening
                 deepLink = 'trust://';
-                fallbackUrl = 'https://trustwallet.com/download/';
-                this.logResult('info', 'Attempting to open Trust Wallet app...');
+                packageName = 'com.wallet.crypto.trustapp';
+                intentUrl = `intent://trust#Intent;scheme=trust;package=com.wallet.crypto.trustapp;S.browser_fallback_url=https://play.google.com/store/apps/details?id=com.wallet.crypto.trustapp;end`;
+                playStoreUrl = 'https://play.google.com/store/apps/details?id=com.wallet.crypto.trustapp';
+                appName = 'Trust Wallet';
                 break;
                 
             case 'coinbase':
-                // Direct Coinbase Wallet app opening
                 deepLink = 'cbwallet://';
-                fallbackUrl = 'https://www.coinbase.com/wallet/downloads';
-                this.logResult('info', 'Attempting to open Coinbase Wallet app...');
+                packageName = 'org.toshi';
+                intentUrl = `intent://cbwallet#Intent;scheme=cbwallet;package=org.toshi;S.browser_fallback_url=https://play.google.com/store/apps/details?id=org.toshi;end`;
+                playStoreUrl = 'https://play.google.com/store/apps/details?id=org.toshi';
+                appName = 'Coinbase Wallet';
                 break;
                 
             default:
@@ -547,27 +561,40 @@ class WalletTester {
                 return;
         }
         
-        // Try to open the app
+        this.logResult('info', `Attempting to open ${appName}...`);
+        
+        // Method 1: Android Intent URL (best for WebViews)
+        const isAndroid = /Android/i.test(navigator.userAgent);
+        if (isAndroid) {
+            try {
+                window.location.href = intentUrl;
+                this.logResult('success', `Using Android Intent to open ${appName}`);
+                return;
+            } catch (error) {
+                this.logResult('warning', `Intent method failed: ${error.message}`);
+            }
+        }
+        
+        // Method 2: Direct deep link
         try {
-            // Create a hidden link and click it
-            const link = document.createElement('a');
-            link.href = deepLink;
-            link.style.display = 'none';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            window.location.href = deepLink;
+            this.logResult('success', `Attempting to open ${appName} with deep link`);
             
-            this.logResult('success', `Opened ${walletType} app (if installed)`);
-            
-            // Check if app opened successfully after a delay
+            // Instructions for user
             setTimeout(() => {
-                // If we're still here, the app might not be installed
-                this.logResult('info', `If ${walletType} didn't open, it might not be installed. Download from: ${fallbackUrl}`);
-            }, 1000);
+                this.logResult('info', `📱 Instructions for ${appName}:`);
+                this.logResult('info', `1. If app didn't open, make sure ${appName} is installed`);
+                this.logResult('info', `2. Download from: ${playStoreUrl}`);
+                this.logResult('info', `3. Manual link: ${deepLink}`);
+                this.logResult('info', `4. In your Kodular app, configure Activity Starter for: ${packageName}`);
+            }, 2000);
             
         } catch (error) {
-            this.logResult('error', `Failed to open ${walletType}: ${error.message}`);
-            this.logResult('info', `Download ${walletType} from: ${fallbackUrl}`);
+            this.logResult('error', `Failed to open ${appName}: ${error.message}`);
+            this.logResult('info', `📱 Manual steps:`);
+            this.logResult('info', `1. Install ${appName}: ${playStoreUrl}`);
+            this.logResult('info', `2. Configure your Kodular app to handle: ${deepLink}`);
+            this.logResult('info', `3. Use Activity Starter with package: ${packageName}`);
         }
     }
 }
