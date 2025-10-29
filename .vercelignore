@@ -1,0 +1,10 @@
+# Ignore documentation files
+*.md
+!README.md
+
+# Ignore development files
+start.sh
+.gitignore
+
+# Ignore git
+.git/
