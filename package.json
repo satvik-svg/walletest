@@ -4,11 +4,7 @@
   "description": "A mobile-optimized web app for testing wallet connections across multiple blockchains (EVM/Ethereum, Solana, Aptos)",
   "main": "index.html",
   "scripts": {
-    "start": "python3 -m http.server 8080 || python -m http.server 8080 || npx serve .",
-    "serve": "npx serve -s . -p 8080",
-    "dev": "npx live-server --port=8080 --host=0.0.0.0",
-    "build": "echo 'Static files ready - no build needed'",
-    "test": "echo 'No tests configured'"
+    "build": "echo 'Static site - no build needed'"
   },
   "keywords": [
     "wallet",
@@ -27,10 +23,7 @@
   "license": "MIT",
   "dependencies": {
   },
-  "devDependencies": {
-    "serve": "^14.2.0",
-    "live-server": "^1.2.2"
-  },
+
   "repository": {
     "type": "git",
     "url": "https://github.com/your-username/multi-chain-wallet-tester.git"
